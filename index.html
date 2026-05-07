@@ -1,1 +1,463 @@
 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--black:#0a0a0a;--white:#fafaf8;--accent:#c8f231;--gray:#1a1a1a;--gray2:#2a2a2a;--muted:#6b6b6b;--border:#2e2e2e}
+body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh}
+.page{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+
+/* Lang switcher */
+.lang-bar{display:flex;gap:8px;margin-bottom:36px}
+.lang-btn{background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;padding:8px 18px;border-radius:30px;cursor:pointer;letter-spacing:.06em;transition:all .2s}
+.lang-btn:hover{border-color:var(--accent);color:var(--white)}
+.lang-btn.active{background:var(--accent);border-color:var(--accent);color:var(--black)}
+
+.header{margin-bottom:40px}
+.header::before{content:'';display:block;width:40px;height:3px;background:var(--accent);margin-bottom:18px}
+.brand{font-family:'Syne',sans-serif;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.title{font-family:'Syne',sans-serif;font-size:clamp(26px,5vw,40px);font-weight:800;line-height:1.08;color:var(--white)}
+.title span{color:var(--accent)}
+.subtitle{margin-top:10px;font-size:14px;font-weight:300;color:var(--muted);line-height:1.7}
+
+.progress-bar{width:100%;height:2px;background:var(--border);margin-bottom:40px;border-radius:2px}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .5s ease}
+
+.section{margin-bottom:36px;opacity:0;transform:translateY(16px);transition:opacity .4s ease,transform .4s ease}
+.section.visible{opacity:1;transform:none}
+.section-num{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+.section-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:3px}
+.section-desc{font-size:13px;color:var(--muted);margin-bottom:16px;font-weight:300}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:9px}
+.card{background:var(--gray);border:1px solid var(--border);border-radius:12px;padding:16px 14px;cursor:pointer;transition:all .2s;text-align:left}
+.card:hover{border-color:var(--accent);background:var(--gray2)}
+.card.active{border-color:var(--accent);background:#1c2200}
+.card-icon{font-size:20px;margin-bottom:7px}
+.card-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:600;color:var(--white);margin-bottom:2px}
+.card-sub{font-size:11px;color:var(--muted)}
+
+.pills{display:flex;flex-wrap:wrap;gap:7px}
+.pill{background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 16px;border-radius:40px;cursor:pointer;transition:all .2s}
+.pill:hover{border-color:var(--accent);color:var(--white)}
+.pill.active{background:var(--accent);border-color:var(--accent);color:var(--black);font-weight:500}
+
+.days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.day-btn{background:var(--gray);border:1px solid var(--border);border-radius:8px;padding:10px 3px;cursor:pointer;text-align:center;font-size:11px;font-weight:500;color:var(--muted);transition:all .2s;font-family:'DM Sans',sans-serif}
+.day-btn:hover{border-color:var(--accent);color:var(--white)}
+.day-btn.active{background:var(--accent);border-color:var(--accent);color:var(--black);font-weight:700}
+
+.hours-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.hour-btn{background:transparent;border:1px solid var(--border);border-radius:6px;padding:7px 12px;cursor:pointer;font-size:12px;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .2s}
+.hour-btn:hover{border-color:var(--accent);color:var(--white)}
+.hour-btn.active{background:var(--accent);border-color:var(--accent);color:var(--black);font-weight:500}
+
+.field{width:100%;background:var(--gray);border:1px solid var(--border);border-radius:10px;padding:13px 15px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:300;outline:none;transition:border .2s;resize:none}
+.field:focus{border-color:var(--accent)}
+.field::placeholder{color:var(--muted)}
+label.sub{font-size:12px;color:var(--muted);display:block;margin-bottom:5px;margin-top:12px}
+
+.slider{-webkit-appearance:none;width:100%;height:3px;background:var(--border);border-radius:2px;outline:none;margin-top:8px}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--accent);border-radius:50%;cursor:pointer}
+.slider-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--muted)}
+.slider-val{text-align:center;margin-top:4px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--accent)}
+
+.client-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+@media(max-width:480px){.client-info{grid-template-columns:1fr}}
+
+.divider-line{height:1px;background:var(--border);margin:6px 0 16px}
+.btn-submit{width:100%;padding:17px;background:var(--accent);color:var(--black);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:none;border-radius:12px;cursor:pointer;transition:all .2s}
+.btn-submit:hover{background:#d4f53e;transform:translateY(-1px)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.sending{display:none;text-align:center;padding:20px;color:var(--muted);font-size:13px}
+.success{display:none;text-align:center;padding:48px 20px}
+.success-icon{font-size:48px;margin-bottom:14px}
+.success h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--accent);margin-bottom:8px}
+.success p{font-size:14px;color:var(--muted);font-weight:300;line-height:1.7}
+
+[dir="rtl"] .header::before{margin-right:0}
+[dir="rtl"] .lang-bar{flex-direction:row-reverse}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Language switcher -->
+  <div class="lang-bar">
+    <button class="lang-btn active" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('ar')">عربي</button>
+  </div>
+
+  <div class="header">
+    <div class="brand" id="t-brand">Coaching Privé</div>
+    <h1 class="title" id="t-title">Ton programme<br><span id="t-title2">sur mesure</span></h1>
+    <p class="subtitle" id="t-sub">Réponds honnêtement — ces infos me permettent de créer un programme 100% adapté à toi.</p>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+
+  <div id="form-content">
+
+    <!-- Client info -->
+    <div class="section visible" id="s0">
+      <div class="section-num" id="t-num0">00 / 06</div>
+      <div class="section-title" id="t-s0title">Tes informations</div>
+      <div class="section-desc" id="t-s0desc">Pour que je puisse te contacter avec ton programme.</div>
+      <div class="client-info">
+        <input class="field" id="client-name" type="text" placeholder="Prénom & Nom" oninput="upd()">
+        <input class="field" id="client-age" type="number" placeholder="Âge" min="10" max="80" oninput="upd()">
+        <input class="field" id="client-phone" type="tel" placeholder="Numéro WhatsApp" oninput="upd()">
+        <input class="field" id="client-email" type="email" placeholder="Email" oninput="upd()">
+      </div>
+    </div>
+
+    <!-- 1 Objectifs -->
+    <div class="section" id="s1">
+      <div class="section-num" id="t-num1">01 / 06</div>
+      <div class="section-title" id="t-s1title">Objectif principal</div>
+      <div class="section-desc" id="t-s1desc">Tu peux en choisir plusieurs.</div>
+      <div class="cards" id="obj-cards">
+        <div class="card" onclick="toggle(this)"><div class="card-icon">🔥</div><div class="card-title" data-key="obj1t">Perdre du poids</div><div class="card-sub" data-key="obj1s">Brûler des graisses</div></div>
+        <div class="card" onclick="toggle(this)"><div class="card-icon">💪</div><div class="card-title" data-key="obj2t">Prendre de la masse</div><div class="card-sub" data-key="obj2s">Gagner en muscles</div></div>
+        <div class="card" onclick="toggle(this)"><div class="card-icon">⚡</div><div class="card-title" data-key="obj3t">Forme générale</div><div class="card-sub" data-key="obj3s">Énergie & santé</div></div>
+        <div class="card" onclick="toggle(this)"><div class="card-icon">🏃</div><div class="card-title" data-key="obj4t">Endurance</div><div class="card-sub" data-key="obj4s">Cardio & souffle</div></div>
+        <div class="card" onclick="toggle(this)"><div class="card-icon">🧘</div><div class="card-title" data-key="obj5t">Mobilité</div><div class="card-sub" data-key="obj5s">Souplesse & posture</div></div>
+        <div class="card" onclick="toggle(this)"><div class="card-icon">🏆</div><div class="card-title" data-key="obj6t">Performance</div><div class="card-sub" data-key="obj6s">Sport de compétition</div></div>
+      </div>
+    </div>
+
+    <!-- 2 Niveau -->
+    <div class="section" id="s2">
+      <div class="section-num" id="t-num2">02 / 06</div>
+      <div class="section-title" id="t-s2title">Niveau actuel</div>
+      <div class="section-desc" id="t-s2desc">Sois honnête, il n'y a pas de mauvaise réponse.</div>
+      <div class="cards">
+        <div class="card" onclick="solo(this,this.closest('.cards'))"><div class="card-icon">🌱</div><div class="card-title" data-key="niv1t">Débutant</div><div class="card-sub" data-key="niv1s">Moins de 6 mois</div></div>
+        <div class="card" onclick="solo(this,this.closest('.cards'))"><div class="card-icon">📈</div><div class="card-title" data-key="niv2t">Intermédiaire</div><div class="card-sub" data-key="niv2s">6 mois — 2 ans</div></div>
+        <div class="card" onclick="solo(this,this.closest('.cards'))"><div class="card-icon">🔝</div><div class="card-title" data-key="niv3t">Avancé</div><div class="card-sub" data-key="niv3s">Plus de 2 ans</div></div>
+      </div>
+    </div>
+
+    <!-- 3 Disponibilités -->
+    <div class="section" id="s3">
+      <div class="section-num" id="t-num3">03 / 06</div>
+      <div class="section-title" id="t-s3title">Disponibilités</div>
+      <div class="section-desc" id="t-s3desc">Quels jours et à quelle heure ?</div>
+      <div class="days-grid" id="days-grid">
+        <div class="day-btn" data-key="dLun" onclick="this.classList.toggle('active');upd()">Lun</div>
+        <div class="day-btn" data-key="dMar" onclick="this.classList.toggle('active');upd()">Mar</div>
+        <div class="day-btn" data-key="dMer" onclick="this.classList.toggle('active');upd()">Mer</div>
+        <div class="day-btn" data-key="dJeu" onclick="this.classList.toggle('active');upd()">Jeu</div>
+        <div class="day-btn" data-key="dVen" onclick="this.classList.toggle('active');upd()">Ven</div>
+        <div class="day-btn" data-key="dSam" onclick="this.classList.toggle('active');upd()">Sam</div>
+        <div class="day-btn" data-key="dDim" onclick="this.classList.toggle('active');upd()">Dim</div>
+      </div>
+      <div class="hours-row">
+        <div class="hour-btn" data-key="hMat" onclick="this.classList.toggle('active');upd()">Matin 6h–10h</div>
+        <div class="hour-btn" data-key="hMid" onclick="this.classList.toggle('active');upd()">Midi 12h–14h</div>
+        <div class="hour-btn" data-key="hApm" onclick="this.classList.toggle('active');upd()">Après-midi 14h–18h</div>
+        <div class="hour-btn" data-key="hSoi" onclick="this.classList.toggle('active');upd()">Soir 18h–22h</div>
+      </div>
+      <label class="sub" id="t-durlabel">Durée par séance</label>
+      <input type="range" class="slider" min="20" max="120" step="10" value="60" id="dur" oninput="document.getElementById('durval').textContent=this.value+' min';upd()">
+      <div class="slider-labels"><span>20 min</span><span>120 min</span></div>
+      <div class="slider-val" id="durval">60 min</div>
+    </div>
+
+    <!-- 4 Santé -->
+    <div class="section" id="s4">
+      <div class="section-num" id="t-num4">04 / 06</div>
+      <div class="section-title" id="t-s4title">Santé & blessures</div>
+      <div class="section-desc" id="t-s4desc">Pour adapter ton programme en toute sécurité.</div>
+      <div class="pills" style="margin-bottom:12px">
+        <div class="pill" onclick="toggle(this)" data-key="bl0">Aucune blessure</div>
+        <div class="pill" onclick="toggle(this)" data-key="bl1">Dos / lombaires</div>
+        <div class="pill" onclick="toggle(this)" data-key="bl2">Genou</div>
+        <div class="pill" onclick="toggle(this)" data-key="bl3">Épaule</div>
+        <div class="pill" onclick="toggle(this)" data-key="bl4">Cheville</div>
+        <div class="pill" onclick="toggle(this)" data-key="bl5">Poignet</div>
+        <div class="pill" onclick="toggle(this)" data-key="bl6">Hernie</div>
+        <div class="pill" onclick="toggle(this)" data-key="bl7">Problème cardiaque</div>
+      </div>
+      <textarea class="field" id="sante-detail" rows="3" placeholder="Détails supplémentaires..." oninput="upd()"></textarea>
+    </div>
+
+    <!-- 5 Équipements -->
+    <div class="section" id="s5">
+      <div class="section-num" id="t-num5">05 / 06</div>
+      <div class="section-title" id="t-s5title">Équipements</div>
+      <div class="section-desc" id="t-s5desc">Où et avec quoi tu t'entraînes ?</div>
+      <div class="cards">
+        <div class="card" onclick="toggle(this)"><div class="card-icon">🏋️</div><div class="card-title" data-key="eq1t">Salle de sport</div><div class="card-sub" data-key="eq1s">Abonnement / accès</div></div>
+        <div class="card" onclick="toggle(this)"><div class="card-icon">🏠</div><div class="card-title" data-key="eq2t">Maison</div><div class="card-sub" data-key="eq2s">Poids, haltères, barres</div></div>
+        <div class="card" onclick="toggle(this)"><div class="card-icon">🚫</div><div class="card-title" data-key="eq3t">Sans équipement</div><div class="card-sub" data-key="eq3s">Poids du corps</div></div>
+        <div class="card" onclick="toggle(this)"><div class="card-icon">🌿</div><div class="card-title" data-key="eq4t">Extérieur</div><div class="card-sub" data-key="eq4s">Parc / stade</div></div>
+      </div>
+    </div>
+
+    <!-- 6 Alimentation -->
+    <div class="section" id="s6">
+      <div class="section-num" id="t-num6">06 / 06</div>
+      <div class="section-title" id="t-s6title">Alimentation & mode de vie</div>
+      <div class="section-desc" id="t-s6desc">Pour un programme complet et cohérent.</div>
+      <label class="sub" id="t-dietlabel">Régime alimentaire</label>
+      <div class="pills" style="margin-bottom:10px">
+        <div class="pill" onclick="solo(this,this.closest('.pills'))" data-key="di0">Classique</div>
+        <div class="pill" onclick="solo(this,this.closest('.pills'))" data-key="di1">Végétarien</div>
+        <div class="pill" onclick="solo(this,this.closest('.pills'))" data-key="di2">Végétalien</div>
+        <div class="pill" onclick="solo(this,this.closest('.pills'))" data-key="di3">Sans gluten</div>
+        <div class="pill" onclick="solo(this,this.closest('.pills'))" data-key="di4">Halal</div>
+        <div class="pill" onclick="solo(this,this.closest('.pills'))" data-key="di5">Autre</div>
+      </div>
+      <label class="sub" id="t-repaslabel">Repas par jour</label>
+      <div class="pills" style="margin-bottom:10px">
+        <div class="pill" onclick="solo(this,this.closest('.pills'))">1–2 repas</div>
+        <div class="pill" onclick="solo(this,this.closest('.pills'))">3 repas</div>
+        <div class="pill" onclick="solo(this,this.closest('.pills'))">4–5 repas</div>
+        <div class="pill" onclick="solo(this,this.closest('.pills'))">Intermittent</div>
+      </div>
+      <label class="sub" id="t-stresslabel">Stress & sommeil</label>
+      <div class="pills" style="margin-bottom:10px">
+        <div class="pill" onclick="solo(this,this.closest('.pills'))">😴 Bien dormi</div>
+        <div class="pill" onclick="solo(this,this.closest('.pills'))">😐 Stress modéré</div>
+        <div class="pill" onclick="solo(this,this.closest('.pills'))">😓 Très stressé</div>
+      </div>
+      <label class="sub" id="t-hablabel">Tabac / alcool</label>
+      <div class="pills" style="margin-bottom:14px">
+        <div class="pill" onclick="solo(this,this.closest('.pills'))">Non</div>
+        <div class="pill" onclick="solo(this,this.closest('.pills'))">Alcool occasionnel</div>
+        <div class="pill" onclick="solo(this,this.closest('.pills'))">Fumeur</div>
+        <div class="pill" onclick="solo(this,this.closest('.pills'))">Les deux</div>
+      </div>
+      <textarea class="field" id="extra-detail" rows="3" placeholder="Informations complémentaires..." oninput="upd()"></textarea>
+    </div>
+
+    <div class="divider-line"></div>
+    <button class="btn-submit" id="submitBtn" onclick="submitForm()" id="t-submit">Envoyer mon formulaire →</button>
+    <div class="sending" id="sending">⏳ Envoi en cours...</div>
+  </div>
+
+  <div class="success" id="success">
+    <div class="success-icon">✅</div>
+    <h2 id="t-succ-title">Formulaire envoyé !</h2>
+    <p id="t-succ-body">Merci pour ces informations.<br>Je vais préparer ton programme personnalisé<br>et te contacter sous 24h.</p>
+  </div>
+
+</div>
+
+<script>
+const T={
+  fr:{
+    brand:"Coaching Privé",title:"Ton programme",title2:"sur mesure",
+    sub:"Réponds honnêtement — ces infos me permettent de créer un programme 100% adapté à toi.",
+    num0:"00 / 06",s0title:"Tes informations",s0desc:"Pour que je puisse te contacter avec ton programme.",
+    num1:"01 / 06",s1title:"Objectif principal",s1desc:"Tu peux en choisir plusieurs.",
+    num2:"02 / 06",s2title:"Niveau actuel",s2desc:"Sois honnête, il n'y a pas de mauvaise réponse.",
+    num3:"03 / 06",s3title:"Disponibilités",s3desc:"Quels jours et à quelle heure ?",
+    durlabel:"Durée par séance",
+    num4:"04 / 06",s4title:"Santé & blessures",s4desc:"Pour adapter ton programme en toute sécurité.",
+    num5:"05 / 06",s5title:"Équipements",s5desc:"Où et avec quoi tu t'entraînes ?",
+    num6:"06 / 06",s6title:"Alimentation & mode de vie",s6desc:"Pour un programme complet et cohérent.",
+    dietlabel:"Régime alimentaire",repaslabel:"Repas par jour",stresslabel:"Stress & sommeil",hablabel:"Tabac / alcool",
+    submit:"Envoyer mon formulaire →",
+    succTitle:"Formulaire envoyé !",succBody:"Merci pour ces informations.<br>Je vais préparer ton programme personnalisé<br>et te contacter sous 24h.",
+    namePh:"Prénom & Nom",agePh:"Âge",phonePh:"Numéro WhatsApp",emailPh:"Email",
+    santePh:"Détails supplémentaires...",extraPh:"Informations complémentaires...",
+    days:["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"],
+    hours:["Matin 6h–10h","Midi 12h–14h","Après-midi 14h–18h","Soir 18h–22h"],
+    obj1t:"Perdre du poids",obj1s:"Brûler des graisses",obj2t:"Prendre de la masse",obj2s:"Gagner en muscles",
+    obj3t:"Forme générale",obj3s:"Énergie & santé",obj4t:"Endurance",obj4s:"Cardio & souffle",
+    obj5t:"Mobilité",obj5s:"Souplesse & posture",obj6t:"Performance",obj6s:"Sport de compétition",
+    niv1t:"Débutant",niv1s:"Moins de 6 mois",niv2t:"Intermédiaire",niv2s:"6 mois — 2 ans",niv3t:"Avancé",niv3s:"Plus de 2 ans",
+    eq1t:"Salle de sport",eq1s:"Abonnement / accès",eq2t:"Maison",eq2s:"Poids, haltères",eq3t:"Sans équipement",eq3s:"Poids du corps",eq4t:"Extérieur",eq4s:"Parc / stade",
+    bl0:"Aucune blessure",bl1:"Dos / lombaires",bl2:"Genou",bl3:"Épaule",bl4:"Cheville",bl5:"Poignet",bl6:"Hernie",bl7:"Problème cardiaque",
+    di0:"Classique",di1:"Végétarien",di2:"Végétalien",di3:"Sans gluten",di4:"Halal",di5:"Autre",
+    dir:"ltr"
+  },
+  en:{
+    brand:"Private Coaching",title:"Your custom",title2:"program",
+    sub:"Answer honestly — this info helps me create a program 100% tailored to you.",
+    num0:"00 / 06",s0title:"Your information",s0desc:"So I can contact you with your program.",
+    num1:"01 / 06",s1title:"Main goal",s1desc:"You can choose multiple.",
+    num2:"02 / 06",s2title:"Current level",s2desc:"Be honest, there's no wrong answer.",
+    num3:"03 / 06",s3title:"Availability",s3desc:"Which days and at what time?",
+    durlabel:"Session duration",
+    num4:"04 / 06",s4title:"Health & injuries",s4desc:"To safely adapt your program.",
+    num5:"05 / 06",s5title:"Equipment",s5desc:"Where and what do you train with?",
+    num6:"06 / 06",s6title:"Diet & lifestyle",s6desc:"For a complete and consistent program.",
+    dietlabel:"Diet type",repaslabel:"Meals per day",stresslabel:"Stress & sleep",hablabel:"Smoking / alcohol",
+    submit:"Submit my form →",
+    succTitle:"Form submitted!",succBody:"Thanks for the information.<br>I'll prepare your personalized program<br>and contact you within 24h.",
+    namePh:"First & Last name",agePh:"Age",phonePh:"WhatsApp number",emailPh:"Email",
+    santePh:"Additional health details...",extraPh:"Additional information...",
+    days:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+    hours:["Morning 6–10am","Noon 12–2pm","Afternoon 2–6pm","Evening 6–10pm"],
+    obj1t:"Lose weight",obj1s:"Burn fat",obj2t:"Gain muscle",obj2s:"Build mass",
+    obj3t:"General fitness",obj3s:"Energy & health",obj4t:"Endurance",obj4s:"Cardio & breath",
+    obj5t:"Mobility",obj5s:"Flexibility & posture",obj6t:"Performance",obj6s:"Competitive sport",
+    niv1t:"Beginner",niv1s:"Less than 6 months",niv2t:"Intermediate",niv2s:"6 months — 2 years",niv3t:"Advanced",niv3s:"More than 2 years",
+    eq1t:"Gym",eq1s:"Membership / access",eq2t:"Home",eq2s:"Weights, dumbbells",eq3t:"No equipment",eq3s:"Bodyweight only",eq4t:"Outdoors",eq4s:"Park / track",
+    bl0:"No injuries",bl1:"Back / lower back",bl2:"Knee",bl3:"Shoulder",bl4:"Ankle",bl5:"Wrist",bl6:"Hernia",bl7:"Heart condition",
+    di0:"Regular",di1:"Vegetarian",di2:"Vegan",di3:"Gluten-free",di4:"Halal",di5:"Other",
+    dir:"ltr"
+  },
+  ar:{
+    brand:"تدريب خاص",title:"برنامجك",title2:"المخصص",
+    sub:"أجب بصدق — هذه المعلومات تساعدني في إنشاء برنامج مناسب 100% لك.",
+    num0:"٠٠ / ٠٦",s0title:"معلوماتك",s0desc:"حتى أتمكن من التواصل معك ببرنامجك.",
+    num1:"٠١ / ٠٦",s1title:"هدفك الرئيسي",s1desc:"يمكنك اختيار أكثر من هدف.",
+    num2:"٠٢ / ٠٦",s2title:"مستواك الحالي",s2desc:"كن صادقاً، لا توجد إجابة خاطئة.",
+    num3:"٠٣ / ٠٦",s3title:"أوقات التدريب",s3desc:"أي أيام وفي أي وقت؟",
+    durlabel:"مدة كل جلسة",
+    num4:"٠٤ / ٠٦",s4title:"الصحة والإصابات",s4desc:"لتعديل برنامجك بأمان.",
+    num5:"٠٥ / ٠٦",s5title:"المعدات المتاحة",s5desc:"أين وبماذا تتدرب؟",
+    num6:"٠٦ / ٠٦",s6title:"التغذية ونمط الحياة",s6desc:"لبرنامج متكامل ومتسق.",
+    dietlabel:"النظام الغذائي",repaslabel:"عدد الوجبات يومياً",stresslabel:"التوتر والنوم",hablabel:"التدخين / الكحول",
+    submit:"إرسال الاستمارة ←",
+    succTitle:"تم إرسال الاستمارة!",succBody:"شكراً على هذه المعلومات.<br>سأعدّ برنامجك الشخصي<br>وأتواصل معك خلال 24 ساعة.",
+    namePh:"الاسم الكامل",agePh:"العمر",phonePh:"رقم واتساب",emailPh:"البريد الإلكتروني",
+    santePh:"تفاصيل إضافية عن صحتك...",extraPh:"معلومات إضافية...",
+    days:["إث","ثل","أر","خم","جم","سب","أح"],
+    hours:["صباح ٦–١٠","ظهر ١٢–٢","عصر ٢–٦","مساء ٦–١٠"],
+    obj1t:"خسارة الوزن",obj1s:"حرق الدهون",obj2t:"بناء العضلات",obj2s:"زيادة الكتلة",
+    obj3t:"اللياقة العامة",obj3s:"الطاقة والصحة",obj4t:"التحمل",obj4s:"الكارديو",
+    obj5t:"المرونة",obj5s:"التمدد والوضعية",obj6t:"الأداء الرياضي",obj6s:"رياضة تنافسية",
+    niv1t:"مبتدئ",niv1s:"أقل من ٦ أشهر",niv2t:"متوسط",niv2s:"٦ أشهر — سنتان",niv3t:"متقدم",niv3s:"أكثر من سنتين",
+    eq1t:"صالة رياضية",eq1s:"اشتراك / دخول",eq2t:"المنزل",eq2s:"أوزان وأثقال",eq3t:"بدون معدات",eq3s:"وزن الجسم فقط",eq4t:"في الخارج",eq4s:"حديقة / ملعب",
+    bl0:"لا إصابات",bl1:"الظهر / القطني",bl2:"الركبة",bl3:"الكتف",bl4:"الكاحل",bl5:"المعصم",bl6:"الفتق",bl7:"مشكلة قلبية",
+    di0:"عادي",di1:"نباتي",di2:"نباتي صرف",di3:"بدون غلوتين",di4:"حلال",di5:"أخرى",
+    dir:"rtl"
+  }
+};
+
+let lang='fr';
+
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');
+  const t=T[l];
+  document.documentElement.setAttribute('dir',t.dir);
+  document.getElementById('t-brand').textContent=t.brand;
+  document.getElementById('t-title').childNodes[0].textContent=t.title+'\n';
+  document.getElementById('t-title2').textContent=t.title2;
+  document.getElementById('t-sub').textContent=t.sub;
+  ['0','1','2','3','4','5','6'].forEach(n=>{
+    const el=document.getElementById('t-num'+n);if(el)el.textContent=t['num'+n];
+    const ti=document.getElementById('t-s'+n+'title');if(ti)ti.textContent=t['s'+n+'title'];
+    const de=document.getElementById('t-s'+n+'desc');if(de)de.textContent=t['s'+n+'desc'];
+  });
+  document.getElementById('t-durlabel').textContent=t.durlabel;
+  document.getElementById('t-dietlabel').textContent=t.dietlabel;
+  document.getElementById('t-repaslabel').textContent=t.repaslabel;
+  document.getElementById('t-stresslabel').textContent=t.stresslabel;
+  document.getElementById('t-hablabel').textContent=t.hablabel;
+  document.getElementById('submitBtn').textContent=t.submit;
+  document.getElementById('t-succ-title').textContent=t.succTitle;
+  document.getElementById('t-succ-body').innerHTML=t.succBody;
+  document.getElementById('client-name').placeholder=t.namePh;
+  document.getElementById('client-age').placeholder=t.agePh;
+  document.getElementById('client-phone').placeholder=t.phonePh;
+  document.getElementById('client-email').placeholder=t.emailPh;
+  document.getElementById('sante-detail').placeholder=t.santePh;
+  document.getElementById('extra-detail').placeholder=t.extraPh;
+  document.querySelectorAll('[data-key]').forEach(el=>{
+    const v=t[el.dataset.key];if(v)el.textContent=v;
+  });
+  const days=document.querySelectorAll('.day-btn');
+  t.days.forEach((d,i)=>{if(days[i])days[i].textContent=d});
+  const hours=document.querySelectorAll('.hour-btn');
+  t.hours.forEach((h,i)=>{if(hours[i])hours[i].textContent=h});
+}
+
+function toggle(el){el.classList.toggle('active');upd()}
+function solo(el,parent){parent.querySelectorAll('.pill,.card').forEach(e=>e.classList.remove('active'));el.classList.add('active');upd()}
+
+function upd(){
+  const sections=document.querySelectorAll('.section');
+  let filled=0;
+  sections.forEach(s=>{
+    if(s.querySelectorAll('.active').length>0||[...s.querySelectorAll('input,textarea')].some(i=>i.value.trim()))filled++;
+  });
+  document.getElementById('prog').style.width=Math.round((filled/sections.length)*100)+'%';
+}
+
+function collectData(){
+  const t=T[lang];
+  const name=document.getElementById('client-name').value||'—';
+  const age=document.getElementById('client-age').value||'—';
+  const phone=document.getElementById('client-phone').value||'—';
+  const email=document.getElementById('client-email').value||'—';
+  const dur=document.getElementById('dur').value;
+  const objs=[...document.querySelectorAll('#obj-cards .card.active')].map(c=>c.querySelector('.card-title').textContent).join(', ')||'—';
+  const niv=document.querySelector('#s2 .card.active .card-title')?.textContent||'—';
+  const days=[...document.querySelectorAll('.day-btn.active')].map(d=>d.textContent).join(', ')||'—';
+  const hours=[...document.querySelectorAll('.hour-btn.active')].map(h=>h.textContent).join(', ')||'—';
+  const injuries=[...document.querySelectorAll('#s4 .pill.active')].map(p=>p.textContent).join(', ')||'—';
+  const santeDetail=document.getElementById('sante-detail').value||'—';
+  const equip=[...document.querySelectorAll('#s5 .card.active')].map(c=>c.querySelector('.card-title').textContent).join(', ')||'—';
+  const diet=document.querySelector('#s6 .pills:nth-of-type(1) .pill.active')?.textContent||'—';
+  const repas=document.querySelector('#s6 .pills:nth-of-type(2) .pill.active')?.textContent||'—';
+  const stress=document.querySelector('#s6 .pills:nth-of-type(3) .pill.active')?.textContent||'—';
+  const hab=document.querySelector('#s6 .pills:nth-of-type(4) .pill.active')?.textContent||'—';
+  const extra=document.getElementById('extra-detail').value||'—';
+
+  return {name,age,phone,email,dur,objs,niv,days,hours,injuries,santeDetail,equip,diet,repas,stress,hab,extra,lang};
+}
+
+function buildMessage(d){
+  return `🏋️ *NOUVEAU CLIENT - Coaching Privé*
+━━━━━━━━━━━━━━━━━━━━
+👤 *Nom:* ${d.name}
+🎂 *Âge:* ${d.age}
+📱 *WhatsApp:* ${d.phone}
+📧 *Email:* ${d.email}
+🌐 *Langue:* ${d.lang.toUpperCase()}
+━━━━━━━━━━━━━━━━━━━━
+🎯 *Objectifs:* ${d.objs}
+📊 *Niveau:* ${d.niv}
+📅 *Jours:* ${d.days}
+⏰ *Créneaux:* ${d.hours}
+⏱ *Durée/séance:* ${d.dur} min
+━━━━━━━━━━━━━━━━━━━━
+🏥 *Blessures:* ${d.injuries}
+📝 *Détails santé:* ${d.santeDetail}
+🏋️ *Équipements:* ${d.equip}
+━━━━━━━━━━━━━━━━━━━━
+🥗 *Régime:* ${d.diet}
+🍽 *Repas/jour:* ${d.repas}
+😴 *Stress/sommeil:* ${d.stress}
+🚬 *Habitudes:* ${d.hab}
+💬 *Notes:* ${d.extra}`;
+}
+
+function submitForm(){
+  const d=collectData();
+  const msg=buildMessage(d);
+  const waMsg=encodeURIComponent(msg);
+  const waUrl=`https://wa.me/213555843380?text=${waMsg}`;
+  const mailSubject=encodeURIComponent(`Nouveau client coaching - ${d.name}`);
+  const mailBody=encodeURIComponent(msg.replace(/\*/g,''));
+  const mailUrl=`mailto:aminealane10@gmail.com?subject=${mailSubject}&body=${mailBody}`;
+
+  document.getElementById('form-content').style.display='none';
+  document.getElementById('success').style.display='block';
+
+  // Open WhatsApp
+  window.open(waUrl,'_blank');
+  // Slight delay then open email
+  setTimeout(()=>{ window.open(mailUrl,'_blank'); },800);
+}
+
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.08});
+document.querySelectorAll('.section').forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
+
